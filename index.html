@@ -9,15 +9,28 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        button {
+        button, textarea {
             margin: 5px;
-            padding: 10px 20px;
+            padding: 10px;
             font-size: 16px;
         }
         #question {
             margin: 20px 0;
             font-size: 18px;
             font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .answers {
+            margin: 20px 0;
+        }
+        .answer {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -27,37 +40,102 @@
     <button onclick="showRandomQuestion()">Randomize Question</button>
     <button onclick="showNextQuestion()">Next Question</button>
 
-    <script>
-const questions = [
-    "Discuss the benefits and challenges of using IBE in a large-scale distributed system. How does the reliance on a Private Key Generator (PKG) affect system security and scalability?",
-    "Design a secure file-sharing system using IBE where users with valid emails can access files encrypted with their email ID. Explain the encryption and decryption steps and address potential attack vectors.",
-    "Compare IBE with traditional PKI systems in terms of: Key management. Scalability for millions of users. Revocation mechanisms.",
-    "How does KP-ABE differ from CP-ABE in terms of flexibility for dynamic policy updates? Suggest a scenario where KP-ABE would be preferable over CP-ABE and justify your choice.",
-    "Explain how secret sharing is used in the access control structure of CP-ABE. Analyze how the security of CP-ABE depends on the underlying secret-sharing mechanism.",
-    "Discuss the trade-offs between PEKS and SSE in terms of: Computational efficiency. Keyword privacy. Scalability to large databases.",
-    "Analyze the impact of deterministic encryption in PEKS on keyword privacy. Suggest a modification to enhance security and explain how it works.",
-    "Extend the given SSE scheme to support multi-user access where users have different permissions for searching the encrypted data. Explain the challenges introduced by this design.",
-    "Compare k-anonymity and l-diversity in mitigating inference attacks. Under what conditions does l-diversity fail to provide privacy guarantees?",
-    "Explain how t-closeness improves upon l-diversity. Illustrate with an example where l-diversity is insufficient but t-closeness ensures better privacy.",
-    "You are implementing a secure medical records system that combines CP-ABE for access control and k-anonymity for data privacy. Define: How attributes will be assigned to users for CP-ABE. How patient data will be anonymized to ensure k-anonymity.",
-    "In the context of differential privacy, compare centralized and local models. Discuss how differential privacy can be applied alongside SSE for secure query answering over encrypted data.",
-    "A university uses PEKS for secure search in its email system. Explain how the use of IBE for encrypting search tokens can enhance keyword privacy. Discuss the challenges in implementing such a system.",
-    "Describe a frequency analysis attack on an SSE system. Propose a countermeasure and discuss its impact on performance.",
-    "Compare the use cases of IBE and ABE in terms of: Flexibility for dynamic access control. Scalability in multi-user environments. Trust assumptions in private key management.",
-    "Discuss how attribute-based encryption can enhance the privacy of anonymized datasets by controlling access to quasi-identifiers and sensitive attributes."
-];
+    <div>
+        <h3>Write Your Answer:</h3>
+        <textarea id="answerInput" placeholder="Type your answer here..."></textarea>
+        <button onclick="submitAnswer()">Submit Answer</button>
+        <button onclick="toggleAnswers()">Show/Hide Previous Answers</button>
+    </div>
 
+    <div class="answers" id="answers" style="display: none;">
+        <h3>Previous Answers:</h3>
+        <div id="answerList"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "Discuss the benefits and challenges of using IBE in a large-scale distributed system. How does the reliance on a Private Key Generator (PKG) affect system security and scalability?",
+            "Design a secure file-sharing system using IBE where users with valid emails can access files encrypted with their email ID. Explain the encryption and decryption steps and address potential attack vectors.",
+            "Compare IBE with traditional PKI systems in terms of: Key management. Scalability for millions of users. Revocation mechanisms.",
+            "How does KP-ABE differ from CP-ABE in terms of flexibility for dynamic policy updates? Suggest a scenario where KP-ABE would be preferable over CP-ABE and justify your choice.",
+            "Explain how secret sharing is used in the access control structure of CP-ABE. Analyze how the security of CP-ABE depends on the underlying secret-sharing mechanism.",
+            "Discuss the trade-offs between PEKS and SSE in terms of: Computational efficiency. Keyword privacy. Scalability to large databases.",
+            "Analyze the impact of deterministic encryption in PEKS on keyword privacy. Suggest a modification to enhance security and explain how it works.",
+            "Extend the given SSE scheme to support multi-user access where users have different permissions for searching the encrypted data. Explain the challenges introduced by this design.",
+            "Compare k-anonymity and l-diversity in mitigating inference attacks. Under what conditions does l-diversity fail to provide privacy guarantees?",
+            "Explain how t-closeness improves upon l-diversity. Illustrate with an example where l-diversity is insufficient but t-closeness ensures better privacy.",
+            "You are implementing a secure medical records system that combines CP-ABE for access control and k-anonymity for data privacy. Define: How attributes will be assigned to users for CP-ABE. How patient data will be anonymized to ensure k-anonymity.",
+            "In the context of differential privacy, compare centralized and local models. Discuss how differential privacy can be applied alongside SSE for secure query answering over encrypted data.",
+            "A university uses PEKS for secure search in its email system. Explain how the use of IBE for encrypting search tokens can enhance keyword privacy. Discuss the challenges in implementing such a system.",
+            "Describe a frequency analysis attack on an SSE system. Propose a countermeasure and discuss its impact on performance.",
+            "Compare the use cases of IBE and ABE in terms of: Flexibility for dynamic access control. Scalability in multi-user environments. Trust assumptions in private key management.",
+            "Discuss how attribute-based encryption can enhance the privacy of anonymized datasets by controlling access to quasi-identifiers and sensitive attributes."
+        ];
 
         let currentIndex = -1;
 
         function showRandomQuestion() {
             const randomIndex = Math.floor(Math.random() * questions.length);
-            document.getElementById("question").innerText = questions[randomIndex];
+            currentIndex = randomIndex;
+            displayQuestion();
         }
 
         function showNextQuestion() {
             currentIndex = (currentIndex + 1) % questions.length;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
             document.getElementById("question").innerText = questions[currentIndex];
+            loadAnswers();
+        }
+
+        function submitAnswer() {
+            const answerInput = document.getElementById("answerInput").value;
+            if (!answerInput.trim()) return alert("Please write an answer before submitting!");
+
+            const question = questions[currentIndex];
+            const savedAnswers = JSON.parse(localStorage.getItem(question)) || [];
+            savedAnswers.push(answerInput);
+            localStorage.setItem(question, JSON.stringify(savedAnswers));
+
+            document.getElementById("answerInput").value = ""; // Clear the input
+            loadAnswers(); // Reload the answers
+        }
+
+        function loadAnswers() {
+            const answersDiv = document.getElementById("answerList");
+            const question = questions[currentIndex];
+            const savedAnswers = JSON.parse(localStorage.getItem(question)) || [];
+            answersDiv.innerHTML = ""; // Clear previous answers
+
+            savedAnswers.forEach((answer, index) => {
+                const answerDiv = document.createElement("div");
+                answerDiv.className = "answer";
+                answerDiv.innerHTML = `
+                    <p>${answer}</p>
+                    <button onclick="deleteAnswer(${index})">Delete</button>
+                `;
+                answersDiv.appendChild(answerDiv);
+            });
+        }
+
+        function deleteAnswer(index) {
+            const question = questions[currentIndex];
+            const savedAnswers = JSON.parse(localStorage.getItem(question)) || [];
+            savedAnswers.splice(index, 1); // Remove the selected answer
+            localStorage.setItem(question, JSON.stringify(savedAnswers)); // Save the updated list
+            loadAnswers(); // Reload answers
+        }
+
+        function toggleAnswers() {
+            const answersDiv = document.getElementById("answers");
+            if (answersDiv.style.display === "none") {
+                answersDiv.style.display = "block";
+                loadAnswers();
+            } else {
+                answersDiv.style.display = "none";
+            }
         }
     </script>
 </body>
