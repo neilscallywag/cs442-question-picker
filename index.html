@@ -28,22 +28,25 @@
     <button onclick="showNextQuestion()">Next Question</button>
 
     <script>
-        const questions = [
-            "Discuss the benefits and challenges of using IBE in a large-scale distributed system. How does the reliance on a Private Key Generator (PKG) affect system security and scalability?",
-            "Design a secure file-sharing system using IBE where users with valid emails can access files encrypted with their email ID. Explain the encryption and decryption steps and address potential attack vectors.",
-            "Compare IBE with traditional PKI systems in terms of: Key management. Scalability for millions of users. Revocation mechanisms.",
-            "How does KP-ABE differ from CP-ABE in terms of flexibility for dynamic policy updates? Suggest a scenario where KP-ABE would be preferable over CP-ABE and justify your choice.",
-            "Explain how secret sharing is used in the access control structure of CP-ABE. Analyze how the security of CP-ABE depends on the underlying secret-sharing mechanism.",
-            "Discuss the trade-offs between PEKS and SSE in terms of: Computational efficiency. Keyword privacy. Scalability to large databases.",
-            "Analyze the impact of deterministic encryption in PEKS on keyword privacy. Suggest a modification to enhance security and explain how it works.",
-            "Extend the given SSE scheme to support multi-user access where users have different permissions for searching the encrypted data. Explain the challenges introduced by this design.",
-            "Compare k-anonymity and l-diversity in mitigating inference attacks. Under what conditions does l-diversity fail to provide privacy guarantees?",
-            "Explain how t-closeness improves upon l-diversity. Illustrate with an example where l-diversity is insufficient but t-closeness ensures better privacy.",
-            "You are implementing a secure medical records system that combines CP-ABE for access control and k-anonymity for data privacy. Define: How attributes will be assigned to users for CP-ABE. How patient data will be anonymized to ensure k-anonymity.",
-            "In the context of differential privacy, compare centralized and local models. Discuss how differential privacy can be applied alongside SSE for secure query answering over encrypted data.",
-            "A university uses PEKS for secure search in its email system. Explain how the use of IBE for encrypting search tokens can enhance keyword privacy. Discuss the challenges in implementing such a system.",
-            "Describe a frequency analysis attack on an SSE system. Propose a countermeasure and discuss its impact on performance."
-        ];
+const questions = [
+    "Discuss the benefits and challenges of using IBE in a large-scale distributed system. How does the reliance on a Private Key Generator (PKG) affect system security and scalability?",
+    "Design a secure file-sharing system using IBE where users with valid emails can access files encrypted with their email ID. Explain the encryption and decryption steps and address potential attack vectors.",
+    "Compare IBE with traditional PKI systems in terms of: Key management. Scalability for millions of users. Revocation mechanisms.",
+    "How does KP-ABE differ from CP-ABE in terms of flexibility for dynamic policy updates? Suggest a scenario where KP-ABE would be preferable over CP-ABE and justify your choice.",
+    "Explain how secret sharing is used in the access control structure of CP-ABE. Analyze how the security of CP-ABE depends on the underlying secret-sharing mechanism.",
+    "Discuss the trade-offs between PEKS and SSE in terms of: Computational efficiency. Keyword privacy. Scalability to large databases.",
+    "Analyze the impact of deterministic encryption in PEKS on keyword privacy. Suggest a modification to enhance security and explain how it works.",
+    "Extend the given SSE scheme to support multi-user access where users have different permissions for searching the encrypted data. Explain the challenges introduced by this design.",
+    "Compare k-anonymity and l-diversity in mitigating inference attacks. Under what conditions does l-diversity fail to provide privacy guarantees?",
+    "Explain how t-closeness improves upon l-diversity. Illustrate with an example where l-diversity is insufficient but t-closeness ensures better privacy.",
+    "You are implementing a secure medical records system that combines CP-ABE for access control and k-anonymity for data privacy. Define: How attributes will be assigned to users for CP-ABE. How patient data will be anonymized to ensure k-anonymity.",
+    "In the context of differential privacy, compare centralized and local models. Discuss how differential privacy can be applied alongside SSE for secure query answering over encrypted data.",
+    "A university uses PEKS for secure search in its email system. Explain how the use of IBE for encrypting search tokens can enhance keyword privacy. Discuss the challenges in implementing such a system.",
+    "Describe a frequency analysis attack on an SSE system. Propose a countermeasure and discuss its impact on performance.",
+    "Compare the use cases of IBE and ABE in terms of: Flexibility for dynamic access control. Scalability in multi-user environments. Trust assumptions in private key management.",
+    "Discuss how attribute-based encryption can enhance the privacy of anonymized datasets by controlling access to quasi-identifiers and sensitive attributes."
+];
+
 
         let currentIndex = -1;
 
